@@ -10,6 +10,8 @@ const NewsFeed = () => {
   const [newsData, setNewsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [articlesPerPage] = useState(6); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,19 +41,27 @@ const NewsFeed = () => {
 
   const max_char = 1;
 
-  const shortContent =
-    newsData.content && typeof newsData.content === "string"
-      ? newsData.content.length > max_char
-        ? newsData.content.substring(0, max_char) + "..."
-        : newsData.content
+  const shortContent = (content) =>
+    content && typeof content === "string"
+      ? content.length > max_char
+        ? content.substring(0, max_char) + "..."
+        : content
       : "";
+
+  // Pagination Logic
+  const indexOfLastArticle = currentPage * articlesPerPage;
+  const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
+  const currentArticles = newsData.slice(indexOfFirstArticle, indexOfLastArticle);
+
+  const paginateNext = () => setCurrentPage(currentPage + 1);
+  const paginatePrev = () => setCurrentPage(currentPage - 1);
 
   return (
     <div>
       <p className="mt-4 text-[2rem] font-bold pl-12">FOR YOU</p>
       <p className="font-bold pl-12 text-[14px]">The best of everything you</p>
       <div className="flex justify-evenly flex-wrap my-auto">
-        {newsData.map((article) => (
+        {currentArticles.map((article) => (
           <div
             key={article.title}
             className="max-w-[360px] min-w-[250px] lg:h-[760px] sm:h-[500px] md:h-[500px] xl:h-[760px] pb-12 shadow-lg bg-white mx-2 rounded-[15px] my-8"
@@ -78,7 +88,7 @@ const NewsFeed = () => {
                   </p>
                   <p>{article.author}</p>
                   <p className="my-6 hidden sm:block md:block">{article.description}</p>
-                  <p className="hidden sm:block md:block">{shortContent}</p>
+                  <p className="hidden sm:block md:block">{shortContent(article.content)}</p>
                 </div>
                 <div className="flex justify-between items-center">
                   <span>
@@ -100,6 +110,19 @@ const NewsFeed = () => {
             </div>
           </div>
         ))}
+      </div>
+      {/* Pagination section */}
+      <div className="flex justify-center mt-4">
+        {currentPage > 1 && (
+          <button onClick={paginatePrev} className="mx-1 px-3 py-1 bg-[#000] text-[#fff]">
+            Prev
+          </button>
+        )}
+        {currentArticles.length === articlesPerPage && (
+          <button onClick={paginateNext} className="mx-1 px-3 py-1 bg-[#000] text-[#fff]">
+            Next
+          </button>
+        )}
       </div>
     </div>
   );
