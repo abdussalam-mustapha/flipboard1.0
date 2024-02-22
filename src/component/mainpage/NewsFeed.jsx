@@ -52,7 +52,7 @@ const NewsFeed = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://newsapi.org/v2/everything?q=football&apiKey=31bf0d3d388c4cf6b472cb8b4cddd32f"
+          "https://newsapi.org/v2/everything?q=keyword&apiKey=31bf0d3d388c4cf6b472cb8b4cddd32f"
         );
 
         setNewsData(response.data.articles);
