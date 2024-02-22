@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
+import { Box, Button, Typography, Modal } from "@mui/material";
+
+
 
 import {
   incrementLike,
@@ -21,15 +20,14 @@ import { HiOutlineUpload } from "react-icons/hi";
 
 import { useDispatch, useSelector } from "react-redux";
 
-
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  bgcolor: "background.paper",
+  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };
@@ -41,7 +39,7 @@ const NewsFeed = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [articlesPerPage] = useState(6);
   const [open, setOpen] = useState(false);
-  const [newCommentText, setNewCommentText] = useState("");
+  // const [newCommentText, setNewCommentText] = useState("");
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -54,7 +52,7 @@ const NewsFeed = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://newsapi.org/v2/everything?q=bitcoin&apiKey=31bf0d3d388c4cf6b472cb8b4cddd32f"
+          "https://newsapi.org/v2/everything?q=football&apiKey=31bf0d3d388c4cf6b472cb8b4cddd32f"
         );
 
         setNewsData(response.data.articles);
@@ -98,8 +96,7 @@ const NewsFeed = () => {
 
   const handleCommentSubmit = (articleTitle) => {
     dispatch(incrementComment({ articleTitle, comment: newCommentText }));
-
-    setNewCommentText("");
+    handleClose();
   };
 
   return (
@@ -148,10 +145,10 @@ const NewsFeed = () => {
                     className="flex justify-between items-center"
                   >
                     <FaRegHeart />
-                    <p>{likes[article.title] || 0}</p>
+                    <p>{likes[article.title]}</p>
                   </span>
-                  <span onClick={handleOpen}>
-                    <RiMessage2Line />
+                  <span>
+                    <RiMessage2Line onClick={handleOpen} />
                     <Modal
                       open={open}
                       onClose={handleClose}
@@ -165,12 +162,24 @@ const NewsFeed = () => {
                           variant="h6"
                           component="h2"
                         >
-                          Text in a modal
+                          Add your comment
                         </Typography>
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                          Duis mollis, est non commodo luctus, nisi erat
-                          porttitor ligula.
+                          <input
+                          type="text"
+                            value={commentText}
+                            onChange={(e) => dispatch(updateCommentText(e.target.value))}
+                            placeholder="Write your comment..."
+                            className="w-full h-24 resize-none border border-gray-300 rounded-lg p-2 mb-2"
+                          />
                         </Typography>
+                        <Button
+                          onClick={() =>
+                            handleCommentSubmit(newsData[currentPage - 1].title)
+                          }
+                        >
+                          Submit
+                        </Button>
                       </Box>
                     </Modal>
                   </span>
