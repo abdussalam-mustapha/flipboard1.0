@@ -25,10 +25,13 @@ function App() {
     <>
       <Router>
         <Navbar />
-        {!isLoggedIn && <Signup />}
+        {/* {!isLoggedIn && <Signup />}
 
-        {isLoggedIn && <NewsFeed />}
+        {isLoggedIn && <NewsFeed />} */}
         <Switch>
+          <Route path="/" exact>
+            <NewsFeed />
+          </Route>
           <Route path='/music' exact >
             <Music />
           </Route>
